@@ -18,36 +18,28 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-
-// your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
-});
-
 // parse timestamp
 app.get("/api/timestamp/:date_string?", function(req, res){
-  const input = req.params.date_string;
+  const { date_string } = req.params;
   let date;
   
-  if (input) {
-    if (/\D/.test(input)) {         // if input contains non-digit characters,
-      date = new Date(input);       // parse it as a date string
+  if (date_string) {
+    if (/\D/.test(date_string)) {         // if date_string contains non-digit characters,
+      date = new Date(date_string);       // parse it as a date string
     }
     else {
-      const ms = parseInt(input);   // otherwise parse it as an integer in milliseconds
+      const ms = parseInt(date_string);   // otherwise parse it as an integer in milliseconds
       date = new Date(ms);
     }
   }
   else {
-    date = new Date();              // if no input, return current time
+    date = new Date();                    // if no date_string provided, use current time
   }
   
-  if (!date.valueOf()) {            // if the value of the date is falsy (NaN), it's an invalid date
-    res.json({"error" : "Invalid Date" });
-  }
-  else {
-    res.json({ "unix": date.getTime(), "utc" : date.toUTCString() });
-  }
+  (!date.valueOf())                       // if the value of the date is falsy (NaN), it's an invalid date
+  ?  res.json({"error" : "Invalid Date" })
+  :  res.json({ "unix": date.getTime(), "utc" : date.toUTCString() });
+  
 });
 
 
