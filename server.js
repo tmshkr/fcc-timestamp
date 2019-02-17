@@ -36,9 +36,7 @@ app.get("/api/timestamp/:date_string?", function(req, res){
     date = new Date();                    // if no date_string provided, use current time
   }
   
-  (!date.valueOf())                       // if the value of the date is falsy (NaN), it's an invalid date
-  ?  res.json({"error" : "Invalid Date" })
-  :  res.json({ "unix": date.getTime(), "utc" : date.toUTCString() });
+  res.json({ "unix": date.getTime(), "utc" : date.toUTCString() });
   
 });
 
